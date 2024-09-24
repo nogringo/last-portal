@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Function Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 20px;
+      border: 1px solid #ccc;
+    }
+
+    .form {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+
+    input,
+    button {
+      padding: 10px;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Test Firebase Cloud Functions</h1>
+
+  <div class="form" id="createPortalForm">
+    <h2>Create Portal</h2>
+    <label for="importantData">Important Data:</label>
+    <input type="text" id="importantData" required>
+
+    <label for="openIn">Open In (days):</label>
+    <input type="number" id="openIn" min="1" required>
+
+    <button id="createPortalBtn">Create Portal</button>
+    <pre id="createPortalResult"></pre>
+  </div>
+
+  <div class="form" id="resetPortalForm">
+    <h2>Reset Portal</h2>
+    <label for="portalIdReset">Portal ID:</label>
+    <input type="text" id="portalIdReset" required>
+
+    <label for="tokenReset">Token:</label>
+    <input type="text" id="tokenReset" required>
+
+    <button id="resetPortalBtn">Reset Portal</button>
+    <pre id="resetPortalResult"></pre>
+  </div>
+
+  <div class="form" id="openPortalForm">
+    <h2>Open Portal</h2>
+    <label for="portalIdOpen">Portal ID:</label>
+    <input type="text" id="portalIdOpen" required>
+
+    <label for="tokenOpen">Token:</label>
+    <input type="text" id="tokenOpen" required>
+
+    <button id="openPortalBtn">Open Portal</button>
+    <pre id="openPortalResult"></pre>
+  </div>
+
+  <script>
+    const createPortalBtn = document.getElementById('createPortalBtn');
+    const resetPortalBtn = document.getElementById('resetPortalBtn');
+    const openPortalBtn = document.getElementById('openPortalBtn');
+
+    createPortalBtn.addEventListener('click', async () => {
+      const importantData = document.getElementById('importantData').value;
+      const openIn = document.getElementById('openIn').value;
+
+      const response = await fetch('http://127.0.0.1:5001/last-portal/us-central1/createPortal', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ importantData, openIn }),
+      });
+      const result = await response.json();
+      document.getElementById('createPortalResult').textContent = JSON.stringify(result, null, 2);
+    });
+
+    resetPortalBtn.addEventListener('click', async () => {
+      const portalId = document.getElementById('portalIdReset').value;
+      const token = document.getElementById('tokenReset').value;
+
+      const response = await fetch('http://127.0.0.1:5001/last-portal/us-central1/resetPortal', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ portalId, token }),
+      });
+      const result = await response.json();
+      document.getElementById('resetPortalResult').textContent = JSON.stringify(result, null, 2);
+    });
+
+    openPortalBtn.addEventListener('click', async () => {
+      const portalId = document.getElementById('portalIdOpen').value;
+      const token = document.getElementById('tokenOpen').value;
+
+      const response = await fetch('http://127.0.0.1:5001/last-portal/us-central1/openPortal', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ portalId, token }),
+      });
+      const result = await response.json();
+      document.getElementById('openPortalResult').textContent = JSON.stringify(result, null, 2);
+    });
+  </script>
+
+</body>
+
+</html>
